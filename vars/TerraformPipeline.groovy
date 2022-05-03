@@ -28,7 +28,9 @@ def call(body){
             }
             stage("Plan"){
                 steps{
-                    terraform.plan()
+                    script{
+                        terraform.plan()
+                    }
                 }
             }
             stage("Apply"){
