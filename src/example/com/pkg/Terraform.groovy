@@ -11,7 +11,7 @@ class Terraform {
     }
 
     void init(){
-        dsl.dir("dir name"){
+        dsl.dir("rancher"){
             dsl.withAWS(roleAccount:awsAccount, role:roleArn) {
                 dsl.bat """terraform init """
             }
@@ -19,7 +19,7 @@ class Terraform {
     }
 
     void plan(){
-        dsl.dir("dir name"){
+        dsl.dir("rancher"){
             dsl.withAWS(roleAccount:awsAccount, role:roleArn) {
                 dsl.bat """terraform plan ${getVarString()}"""
             }
@@ -28,7 +28,7 @@ class Terraform {
 
     void apply(){
         if(applyPlan()){
-            dsl.dir("dir name"){
+            dsl.dir("rancher"){
                 dsl.withAWS(roleAccount:awsAccount, role:roleArn) {
                     dsl.bat """terraform apply ${getVarString()}"""
                 }
