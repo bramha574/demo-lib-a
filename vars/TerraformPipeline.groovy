@@ -40,6 +40,13 @@ def call(body){
                     }
                 }
             }
+            stage("Destroy"){
+                steps{
+                    script{
+                        terraform.destroy()
+                    }
+                }
+            }
         }
 
         post{
