@@ -54,9 +54,11 @@ class Terraform {
         return  approvalInput
     }
 
-    private Map userInput(){
+    private def userInput(){
         def userInfo = dsl.input(message: "Enter the below info to move on", parameters: [
-                dsl.string(description: "Enter Terraform Vars. Eg: instance_type=t2.small,prefix=dev", name: "tfVars", trim:true)
+                dsl.choice(choices: ['dev', 'prod', 'sandbox'], description: "Select The Prefix", name: "prefix"),
+                dsl.choice(choices: ['v1.21.11+k3s1', 'v1.22.11+k3s1'], description: "Select The Kubernetes Lite Version For Rancher", name: "kubernetesVersion"),
+                dsl.password(defaultValue: '', description: 'Enter the RancherPassword. The password should be greater than 12', name: 'rancherPassword')
         ])
 
         dsl.echo(userInfo)
@@ -65,7 +67,8 @@ class Terraform {
     }
 
     private String setVarString(){
-        if(!tfVars){
+        tfVars = "-var prefix=${userInput().prefix} -var kubernetes_version=${userInput().kubernetesVersion} -var rancher_password=${userInput().rancherPassword}"
+/*        if(!tfVars){
             List varList = []
             List varSplitList = userInput().toString().replace(" ", "").split(",")
 
@@ -77,6 +80,6 @@ class Terraform {
             }
 
             tfVars = varList.join(" ")
-        }
+        }*/
     }
 }
