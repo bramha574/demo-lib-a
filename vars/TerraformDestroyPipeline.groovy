@@ -19,6 +19,13 @@ def call(body){
                     }
                 }
             }
+            stage("Init"){
+                steps{
+                    script{
+                        terraform.init()
+                    }
+                }
+            }
             stage("Destroy"){
                 steps{
                     script{
