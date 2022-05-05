@@ -5,8 +5,9 @@ import example.com.pkg.utils.Utilities
 class Terraform {
     def dsl
 
-    String awsAccount = "992247318733"
-    String roleArn = "arn:aws:iam::992247318733:role/demo-admin-role"
+    private String awsAccount = "992247318733"
+    private String roleArn = "arn:aws:iam::992247318733:role/demo-admin-role"
+    private static String tfVars = null
 
     private Utilities utilities = new Utilities(dsl)
 
@@ -23,9 +24,10 @@ class Terraform {
     }
 
     void plan(){
+        setVarString()
         dsl.dir("rancher"){
             dsl.withAWS(roleAccount:awsAccount, role:roleArn) {
-                utilities.shellCommand("""terraform plan ${getVarString()}""", "Run Terraform Plan")
+                utilities.shellCommand("""terraform plan ${tfVars}""", "Run Terraform Plan")
             }
         }
     }
@@ -34,7 +36,7 @@ class Terraform {
         if(applyPlan()){
             dsl.dir("rancher"){
                 dsl.withAWS(roleAccount:awsAccount, role:roleArn) {
-                    utilities.shellCommand("""terraform apply ${getVarString()}""", "Run Terraform Apply")
+                    utilities.shellCommand("""terraform apply ${tfVars} -auto-approve""", "Run Terraform Apply")
                 }
             }
         }
@@ -62,19 +64,19 @@ class Terraform {
         return userInfo
     }
 
-    private String getVarString(){
-        List varList = []
-        List varSplitList = userInput().toString().replace(" ", "").split(",")
+    private String setVarString(){
+        if(!tfVars){
+            List varList = []
+            List varSplitList = userInput().toString().replace(" ", "").split(",")
 
-        for (String arg in varSplitList){
-            if(arg.length()>0){
-                String item = """-var "${arg}" """
-                varList.add(item)
+            for (String arg in varSplitList){
+                if(arg.length()>0){
+                    String item = """-var "${arg}" """
+                    varList.add(item)
+                }
             }
+
+            tfVars = varList.join(" ")
         }
-
-        return varList.join(" ")
-
-        //["""-var instance_type="t2.small" """, """-var prefix="dev" """]
     }
 }
