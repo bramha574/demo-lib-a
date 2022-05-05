@@ -3,7 +3,7 @@ package example.com.pkg
 import example.com.pkg.utils.Utilities
 
 class Terraform {
-    def dsl
+    static def dsl
 
     private String awsAccount = "992247318733"
     private String roleArn = "arn:aws:iam::992247318733:role/demo-admin-role"
@@ -54,7 +54,7 @@ class Terraform {
         return  approvalInput
     }
 
-    private def userInput(){
+    private static def userInput(){
         def userInfo = dsl.input(message: "Enter the below info to move on", parameters: [
                 dsl.choice(choices: ['dev', 'prod', 'sandbox'], description: "Select The Prefix", name: "prefix"),
                 dsl.choice(choices: ['v1.21.11+k3s1', 'v1.22.11+k3s1'], description: "Select The Kubernetes Lite Version For Rancher", name: "kubernetesVersion"),
@@ -66,9 +66,10 @@ class Terraform {
         return userInfo
     }
 
-    private String setVarString(){
+    private static void setVarString(){
+        def userInfo = userInput()
         if(!tfVars) {
-            tfVars = "-var prefix=${userInput().prefix} -var kubernetes_version=${userInput().kubernetesVersion} -var rancher_password=${userInput().rancherPassword}"
+            tfVars = "-var prefix=${userInfo.prefix} -var kubernetes_version=${userInfo.kubernetesVersion} -var rancher_password=${userInfo.rancherPassword}"
         }
 /*        if(!tfVars){
             List varList = []
