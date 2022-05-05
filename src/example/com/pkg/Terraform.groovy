@@ -57,6 +57,8 @@ class Terraform {
                 dsl.string(description: "Enter Terraform Vars. Eg: instance_type=t2.small,prefix=dev", name: "tfVars", trim:true)
         ])
 
+        dsl.echo(userInfo)
+
         return userInfo
     }
 
