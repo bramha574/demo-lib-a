@@ -75,6 +75,8 @@ class Terraform {
     }
 
     void destroy(){
+        setVarString()
+
         dsl.dir("rancher"){
             dsl.withAWS(roleAccount:awsAccount, role:roleArn) {
                 utilities.shellCommand("""terraform destroy ${tfVars} -auto-approve""", "Run Terraform Plan")
