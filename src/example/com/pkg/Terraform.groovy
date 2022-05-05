@@ -53,7 +53,7 @@ class Terraform {
     }
 
     private Map userInput(){
-        Map userInfo = dsl.input(message: "Enter the below info to move on", parameters: [
+        def userInfo = dsl.input(message: "Enter the below info to move on", parameters: [
                 dsl.string(description: "Enter Terraform Vars. Eg: instance_type=t2.small,prefix=dev", name: "tfVars", trim:true)
         ])
 
@@ -62,7 +62,7 @@ class Terraform {
 
     private String getVarString(){
         List varList = []
-        List varSplitList = userInput().tfVars.replace(" ", "").split(",")
+        List varSplitList = userInput().tfVars.toString().replace(" ", "").split(",")
 
         for (String arg in varSplitList){
             if(arg.length()>0){
