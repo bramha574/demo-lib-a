@@ -64,7 +64,7 @@ class Terraform {
 
     private String getVarString(){
         List varList = []
-        List varSplitList = userInput().tfVars.toString().replace(" ", "").split(",")
+        List varSplitList = userInput().toString().replace(" ", "").split(",")
 
         for (String arg in varSplitList){
             if(arg.length()>0){
