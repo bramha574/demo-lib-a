@@ -1,10 +1,14 @@
 package example.com.pkg
 
+import example.com.pkg.utils.Utilities
+
 class Terraform {
     def dsl
 
     String awsAccount = "992247318733"
     String roleArn = "arn:aws:iam::992247318733:role/demo-admin-role"
+
+    private Utilities utilities = new Utilities(dsl)
 
     Terraform(def dsl){
         this.dsl = dsl
@@ -13,7 +17,7 @@ class Terraform {
     void init(){
         dsl.dir("rancher"){
             dsl.withAWS(roleAccount:awsAccount, role:roleArn) {
-                dsl.bat """terraform init """
+                utilities.shellCommand("""terraform init""", "Run Terraform Init")
             }
         }
     }
@@ -21,7 +25,7 @@ class Terraform {
     void plan(){
         dsl.dir("rancher"){
             dsl.withAWS(roleAccount:awsAccount, role:roleArn) {
-                dsl.bat """terraform plan ${getVarString()}"""
+                utilities.shellCommand("""terraform plan ${getVarString()}""", "Run Terraform Plan")
             }
         }
     }
@@ -30,7 +34,7 @@ class Terraform {
         if(applyPlan()){
             dsl.dir("rancher"){
                 dsl.withAWS(roleAccount:awsAccount, role:roleArn) {
-                    dsl.bat """terraform apply ${getVarString()}"""
+                    utilities.shellCommand("""terraform apply ${getVarString()}""", "Run Terraform Apply")
                 }
             }
         }
