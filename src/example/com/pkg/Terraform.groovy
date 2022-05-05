@@ -61,7 +61,7 @@ class Terraform {
                 dsl.password(defaultValue: '', description: 'Enter the RancherPassword. The password should be greater than 12', name: 'rancherPassword')
         ])
 
-        dsl.echo(userInfo)
+        dsl.echo(userInfo.toString())
 
         return userInfo
     }
