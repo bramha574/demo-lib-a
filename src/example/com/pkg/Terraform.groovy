@@ -67,7 +67,9 @@ class Terraform {
     }
 
     private String setVarString(){
-        tfVars = "-var prefix=${userInput().prefix} -var kubernetes_version=${userInput().kubernetesVersion} -var rancher_password=${userInput().rancherPassword}"
+        if(!tfVars) {
+            tfVars = "-var prefix=${userInput().prefix} -var kubernetes_version=${userInput().kubernetesVersion} -var rancher_password=${userInput().rancherPassword}"
+        }
 /*        if(!tfVars){
             List varList = []
             List varSplitList = userInput().toString().replace(" ", "").split(",")
