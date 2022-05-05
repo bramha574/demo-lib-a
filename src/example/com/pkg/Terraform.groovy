@@ -58,7 +58,8 @@ class Terraform {
         def userInfo = dsl.input(message: "Enter the below info to move on", parameters: [
                 dsl.choice(choices: ['dev', 'prod', 'sandbox'], description: "Select The Prefix", name: "prefix"),
                 dsl.choice(choices: ['v1.21.11+k3s1', 'v1.22.11+k3s1'], description: "Select The Kubernetes Lite Version For Rancher", name: "kubernetesVersion"),
-                dsl.password(defaultValue: '', description: 'Enter the RancherPassword. The password should be greater than 12', name: 'rancherPassword')
+                dsl.password(defaultValue: '', description: 'Enter the RancherPassword. The password should be greater than 12', name: 'rancherPassword'),
+                dsl.booleanParam(description: 'Check this if you want to add windows node', name: 'addWindowsNode')
         ])
 
         dsl.echo(userInfo.toString())
@@ -69,7 +70,7 @@ class Terraform {
     private static void setVarString(){
         def userInfo = userInput()
         if(!tfVars) {
-            tfVars = "-var prefix=${userInfo.prefix} -var kubernetes_version=${userInfo.kubernetesVersion} -var rancher_password=${userInfo.rancherPassword}"
+            tfVars = "-var prefix=${userInfo.prefix} -var kubernetes_version=${userInfo.kubernetesVersion} -var rancher_password=${userInfo.rancherPassword} -var add_windows_node=${userInfo.addWindowsNode}"
         }
 /*        if(!tfVars){
             List varList = []
