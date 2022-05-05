@@ -72,18 +72,13 @@ class Terraform {
         if(!tfVars) {
             tfVars = "-var prefix=${userInfo.prefix} -var kubernetes_version=${userInfo.kubernetesVersion} -var rancher_password=${userInfo.rancherPassword} -var add_windows_node=${userInfo.addWindowsNode}"
         }
-/*        if(!tfVars){
-            List varList = []
-            List varSplitList = userInput().toString().replace(" ", "").split(",")
+    }
 
-            for (String arg in varSplitList){
-                if(arg.length()>0){
-                    String item = """-var "${arg}" """
-                    varList.add(item)
-                }
+    void destroy(){
+        dsl.dir("rancher"){
+            dsl.withAWS(roleAccount:awsAccount, role:roleArn) {
+                utilities.shellCommand("""terraform destroy -auto-approve""", "Run Terraform Plan")
             }
-
-            tfVars = varList.join(" ")
-        }*/
+        }
     }
 }
