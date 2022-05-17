@@ -1,0 +1,44 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+apply plugin: 'groovy'
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    main {
+        groovy {
+            srcDirs 'src'
+            srcDirs 'vars'
+        }
+    }
+
+    test {
+        groovy {
+            srcDirs 'test'
+            srcDirs 'src'
+        }
+    }
+}
+
+dependencies {
+    implementation 'junit:junit:4.13.1'
+    implementation 'org.codehaus.groovy:groovy-all:3.0.10'
+    testImplementation 'org.codehaus.groovy:groovy-all:3.0.10'
+    // https://mvnrepository.com/artifact/software.amazon.awssdk/bom
+    runtimeOnly group: 'software.amazon.awssdk', name: 'bom', version: '2.17.191', ext: 'pom'
+    // https://mvnrepository.com/artifact/software.amazon.awssdk/secretsmanager
+    implementation group: 'software.amazon.awssdk', name: 'secretsmanager', version: '2.17.190'
+    implementation group: 'software.amazon.awssdk', name: 's3', version: '2.17.190'
+    testImplementation('junit:junit:4.13')
+}
+
+
+test {
+    useJUnitPlatform()
+}

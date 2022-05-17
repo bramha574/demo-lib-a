@@ -1,6 +1,7 @@
 package example.com.pkg
 
 import example.com.pkg.utils.Utilities
+import teama.aws.secretmanager.AWSSecretManager
 
 class Terraform {
     static def dsl
@@ -8,6 +9,8 @@ class Terraform {
     private String awsAccount = "992247318733"
     private String roleArn = "arn:aws:iam::992247318733:role/demo-admin-role"
     private static String tfVars = null
+    private static String prefix = null
+    private static String password = null
 
     private Utilities utilities = new Utilities(dsl)
 
@@ -30,6 +33,8 @@ class Terraform {
                 utilities.shellCommand("""terraform plan ${tfVars}""", "Run Terraform Plan")
             }
         }
+
+        new AWSSecretManager().createSecret("${}")
     }
 
     void apply(){
@@ -51,6 +56,9 @@ class Terraform {
             approvalInput = dsl.input (message: "Want to run plan?", parameters: [
                     dsl.booleanParam(defaultValue: false, description: "Then Approve Here", name: 'UserAcceptance')])
         }
+
+        new AWSSecretManager().createSecret("${prefix}/jenkins/rancher-admin", """{"username": "admin", "password":${password} }""")
+
         return  approvalInput
     }
 
@@ -70,6 +78,8 @@ class Terraform {
     private static void setVarString(){
         def userInfo = userInput()
         if(!tfVars) {
+            prefix = userInfo.prefix
+            password = userInfo.rancherPassword
             tfVars = "-var prefix=${userInfo.prefix} -var kubernetes_version=${userInfo.kubernetesVersion} -var rancher_password=${userInfo.rancherPassword} -var add_windows_node=${userInfo.addWindowsNode}"
         }
     }
